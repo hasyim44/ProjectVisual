@@ -6,32 +6,184 @@
 package project;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Hasyim_Asyari
  */
 public class FormUser extends javax.swing.JFrame {
+    DefaultComboBoxModel modelRambut = new DefaultComboBoxModel();
      private Connection con = koneksi.getConnection();
-     java.util.Date tglsekarang = new java.util.Date();
-     private SimpleDateFormat smpdtfmt = new SimpleDateFormat(" dd MMMMMMMMM yyyy", Locale.getDefault());
-    //diatas adalah pengaturan format penulisan, bisa diubah sesuai keinginan.
-     private String tanggal = smpdtfmt.format(tglsekarang);
-    /**
+//     java.util.Date tglsekarang = new java.util.Date();
+//     private SimpleDateFormat smpdtfmt = new SimpleDateFormat(" dd MMMMMMMMM yyyy", Locale.getDefault());
+//    //diatas adalah pengaturan format penulisan, bisa diubah sesuai keinginan.
+//     private String tanggal = smpdtfmt.format(tglsekarang);
+     
+     private Statement stt;
+     private ResultSet rss;
+     private DefaultTableModel model;
+     private int baris;
+     private boolean data;
+    
+     /**
      * Creates new form FormUser
      */
     public FormUser() {
         initComponents();
         no(false);
-        setLocationRelativeTo(this);
-        tgl.setText(tanggal);
+//        setLocationRelativeTo(this);
+//        tgl.setText(tanggal);
+        Date now = new Date();
+        DateFormat tanggal = DateFormat.getDateInstance(DateFormat.FULL,new Locale("in","ID"));
+        tgl.setText(tanggal.format(now));
+        
+        
     }
-    private void no(boolean a){
+   private void no(boolean a){
         txtno.setEnabled(a);
     };
+    
+
+    private void InitTable(){
+        model = new DefaultTableModel();
+        model.addColumn("Id");
+        model.addColumn("Nama");
+        model.addColumn("No. Telpon");
+        model.addColumn("Alamat");
+        model.addColumn("Model Rambut");
+        
+        jTable1.setModel(model);
+    }
+    
+    private void TambahData(String nm, String np, String at, String mr){
+        try {
+            String sql = 
+                    "INSERT INTO pelanggan VALUES (NULL,'"+nm+"','"+np+"','"+at+"','"+mr+"')";
+            stt = con.createStatement();
+            stt.executeUpdate(sql);
+            model.addRow(new Object[]{nm,np,at,mr});
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void UbahData(String nm, String np, String at, String mr, String id){
+        try {
+            
+            String sql = "UPDATE pelanggan SET "
+                         + "nm_pelanggan='"+nm+"',"
+                         + "no_pelanggan='"+np+"',"
+                         + "al_pelanggan='"+at+"',"
+                         + "mr_pelanggan='"+mr+"'"
+                         + "WHERE id_pelanggan='"+id+"'";
+            stt = con.createStatement();
+            stt.executeUpdate(sql);
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void TampilData(){
+        try {
+            String sql = "SELECT * FROM pelanggan";
+            stt = con.createStatement();
+            rss = stt.executeQuery(sql);
+            while(rss.next()){
+                Object[] o = new Object[5];
+                o[0] = rss.getInt("id_pelanggan");
+                o[1] = rss.getString("nm_pelanggan");
+                o[2] = rss.getString("no_pelanggan");
+                o[3] = rss.getString("al_pelanggan");
+                o[4] = rss.getString("mr_pelanggan");
+                model.addRow(o);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+     private void ValidasiData(String nm, String np, String at ,String mr){              //Method untuk validasi data
+        try{
+            String sql = "SELECT*from pelanggan ";      //query untuk melihat isi tabel buku pada database
+            stt = con.createStatement();
+            rss = stt.executeQuery(sql);
+            while(rss.next()){
+              Object[] o = new Object[2];                               //membuat Objek
+              o[0] = rss.getString("id_pelanggan").toLowerCase();              //objek 0 menampung data judul
+              o[1] = rss.getString("nm_pelanggan").toLowerCase();            //objek 1 menampung data penulils
+              
+              if(o[0].equals(nm.toLowerCase())&& o[1].equals(np.toLowerCase())){     //jika data judul sudah ada dan penulis sudah ada
+                  JOptionPane.showMessageDialog(null, "Data SUDAH ADA!!!!");                //akan tampil bahwa data sudah ada
+                  data = false ;                                                            
+                  break;                                                                    //proses akan berhenti
+              }
+            }
+            if(data==true){                                                                 //jika data belum ada
+                TambahData(nm,np,at,mr);                                            //akan memanggil method TambahData untuk mengisi judul, penuli, harga
+                    JOptionPane.showMessageDialog(null, "Berhasil Simpan Data");
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+     private void p(){
+        txtnama.setEnabled(false);
+        txtnohp.setEnabled(false);
+        jtxtalamat.setEnabled(false);
+        jcbmodelrambut.setEnabled(false);
+        kalender.setEnabled(false);
+        btnBatal.setEnabled(false);
+        btnEdit.setEnabled(false);
+        btnSimpan.setEnabled(false);
+     }
+     private void r(){
+        txtnama.setEnabled(true);
+        txtnohp.setEnabled(true);
+        jtxtalamat.setEnabled(true);
+        jcbmodelrambut.setEnabled(true);
+        kalender.setEnabled(true);
+        btnBatal.setEnabled(true);
+        btnEdit.setEnabled(true);
+        btnSimpan.setEnabled(true);
+        txtnama.requestFocus();
+    }
+    
+     private void o(){
+        txtnama.setText("");
+        txtnohp.setText("");
+        jtxtalamat.setText("");        
+        jcbmodelrambut.setSelectedIndex(0);
+     }
+     
+      private void ComboRambut(){
+        jcbmodelrambut.setModel(modelRambut);
+        try{
+            stt = con.createStatement();
+            rss = stt.executeQuery("SELECT * FROM model");
+            
+            while(rss.next()){
+                modelRambut.addElement(rss.getString("jenis"));
+            }
+        }catch(Exception e){
+            
+        }
+    }
+      
+      private void Transaksi(){
+    
+    }
     
 
     /**
@@ -67,14 +219,14 @@ public class FormUser extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtnama = new javax.swing.JTextField();
+        txtnohp = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jtxtalamat = new javax.swing.JTextArea();
         tgl = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         txtno = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
+        jcbmodelrambut = new javax.swing.JComboBox();
         btnTambah = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
@@ -83,17 +235,28 @@ public class FormUser extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         btnEdit = new javax.swing.JButton();
         btnKembali = new javax.swing.JButton();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        kalender = new com.toedter.calendar.JDateChooser();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Kasir");
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logo.png"))); // NOI18N
 
         lblHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/home.png"))); // NOI18N
+        lblHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblHome.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblHomeMouseClicked(evt);
@@ -101,6 +264,7 @@ public class FormUser extends javax.swing.JFrame {
         });
 
         lblForm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/form.png"))); // NOI18N
+        lblForm.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblForm.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblFormMouseClicked(evt);
@@ -108,6 +272,7 @@ public class FormUser extends javax.swing.JFrame {
         });
 
         lblPelanggan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/member1.png"))); // NOI18N
+        lblPelanggan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblPelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblPelangganMouseClicked(evt);
@@ -115,6 +280,7 @@ public class FormUser extends javax.swing.JFrame {
         });
 
         lblTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/kasir.png"))); // NOI18N
+        lblTransaksi.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblTransaksi.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTransaksiMouseClicked(evt);
@@ -122,6 +288,7 @@ public class FormUser extends javax.swing.JFrame {
         });
 
         lblTentang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/tentang.png"))); // NOI18N
+        lblTentang.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblTentang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTentangMouseClicked(evt);
@@ -129,6 +296,7 @@ public class FormUser extends javax.swing.JFrame {
         });
 
         lblKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logout.png"))); // NOI18N
+        lblKeluar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblKeluar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblKeluarMouseClicked(evt);
@@ -264,7 +432,7 @@ public class FormUser extends javax.swing.JFrame {
                                 .addContainerGap())))))
         );
 
-        jPanel6.setBackground(new java.awt.Color(0, 102, 255));
+        jPanel6.setBackground(new java.awt.Color(51, 153, 255));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -299,10 +467,11 @@ public class FormUser extends javax.swing.JFrame {
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 13, Short.MAX_VALUE))
         );
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel15.setText("Nama");
 
@@ -312,27 +481,42 @@ public class FormUser extends javax.swing.JFrame {
 
         jLabel18.setText("Model Rambut");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtnama.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtnamaActionPerformed(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        jtxtalamat.setColumns(20);
+        jtxtalamat.setRows(5);
+        jScrollPane2.setViewportView(jtxtalamat);
 
         tgl.setText("jLabel19");
 
         jLabel20.setText("No ");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1. Model Fauxhawk", "2. Model Mohawk", "3. Model Pompadour", "4. Model Rambut Bowl cut", "5. Model Rambut Crop", "6. Model Rambut Comb over", "7. Model Rambut Shape-Up" }));
+        jcbmodelrambut.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "== Pilih ==" }));
 
         btnTambah.setText("Tambah");
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahActionPerformed(evt);
+            }
+        });
 
         btnBatal.setText("Batal");
+        btnBatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBatalActionPerformed(evt);
+            }
+        });
 
         btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -345,9 +529,19 @@ public class FormUser extends javax.swing.JFrame {
                 "Id", "Nama", "No. Telp", "Model Rambut"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(jTable1);
 
         btnEdit.setText("Edit");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnKembali.setText("Kembali");
         btnKembali.addActionListener(new java.awt.event.ActionListener() {
@@ -387,30 +581,30 @@ public class FormUser extends javax.swing.JFrame {
                                             .addGap(286, 286, 286)
                                             .addComponent(tgl))
                                         .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addGap(255, 255, 255)
-                                            .addComponent(jLabel20)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(txtno, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
                                             .addGap(18, 18, 18)
                                             .addComponent(btnBatal, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(18, 18, 18)
                                             .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(18, 18, 18)
-                                            .addComponent(btnSimpan)))
-                                    .addGap(82, 82, 82))
+                                            .addComponent(btnSimpan))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addGap(255, 255, 255)
+                                            .addComponent(jLabel20)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(txtno, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGap(56, 56, 56))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                                            .addComponent(jTextField2))
+                                            .addComponent(txtnama, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                                            .addComponent(txtnohp))
                                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jcbmodelrambut, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(49, 49, 49)
                                             .addComponent(jLabel2)
                                             .addGap(18, 18, 18)
-                                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(kalender, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGap(0, 0, Short.MAX_VALUE)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(46, 46, 46)
@@ -427,7 +621,7 @@ public class FormUser extends javax.swing.JFrame {
                         .addGap(1, 1, 1)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(9, 9, 9))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -436,7 +630,7 @@ public class FormUser extends javax.swing.JFrame {
                             .addComponent(jLabel20))))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtnohp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(25, 25, 25)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel17)
@@ -446,7 +640,7 @@ public class FormUser extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbmodelrambut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -464,7 +658,7 @@ public class FormUser extends javax.swing.JFrame {
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(kalender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
 
@@ -479,9 +673,9 @@ public class FormUser extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -491,9 +685,8 @@ public class FormUser extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -581,15 +774,122 @@ public class FormUser extends javax.swing.JFrame {
             {return;}
     }//GEN-LAST:event_lblkeluarMouseClicked
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtnamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnamaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtnamaActionPerformed
 
     private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
         // TODO add your handling code here:
         new MenuKasir().setVisible(true);
-       
+       dispose();
     }//GEN-LAST:event_btnKembaliActionPerformed
+
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        // TODO add your handling code here:
+        r();
+        
+    }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
+        // TODO add your handling code here:
+        txtnama.setText("");
+        txtnohp.setText("");
+        jtxtalamat.setText("");        
+        jcbmodelrambut.setSelectedIndex(0);
+       
+    }//GEN-LAST:event_btnBatalActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+         int baris = jTable1.getSelectedRow();
+        
+        
+        jTable1.setValueAt(txtnama.getText(),baris,1);
+        jTable1.setValueAt(txtnohp.getText(),baris,2);
+        jTable1.setValueAt(jtxtalamat.getText(),baris,3);
+        jTable1.setValueAt(jcbmodelrambut.getSelectedItem(),baris,4);
+        
+        
+        String nm=jTable1.getValueAt(baris,1).toString();
+        String np=jTable1.getValueAt(baris,2).toString();
+        String at=jTable1.getValueAt(baris,3).toString();
+        String mr=jTable1.getValueAt(baris,4).toString();
+        String id=jTable1.getValueAt(baris,0).toString();
+        
+        
+        txtnama.setText(nm);
+        txtnohp.setText(np);
+        jtxtalamat.setText(at);        
+        jcbmodelrambut.setSelectedItem(mr);
+        
+        UbahData(nm,np,at,mr,id);
+        p();
+        o();
+       
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        // TODO add your handling code here:
+                if(txtnama.getText().equals("") && txtnohp.getText().equals(""))
+     {
+           JOptionPane.showMessageDialog(null, "Data Belum Lengkap","Warning !!!!",JOptionPane.INFORMATION_MESSAGE);
+           txtnama.requestFocus();
+     } else{
+        String nm = txtnama.getText();
+        String np = txtnohp.getText();
+        String at = jtxtalamat.getText();
+        String mr = jcbmodelrambut.getSelectedItem().toString();
+        TambahData(nm,np,at,mr);
+        
+        
+        
+        InitTable();
+        TampilData();
+       
+    }                                        
+    
+    
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+         int baris = jTable1.getSelectedRow();               //memilih baris yang akan dipilih dengan mouse
+        
+        txtnama.setText(jTable1.getValueAt(baris, 1).toString());
+        txtnohp.setText(jTable1.getValueAt(baris, 2).toString());
+        jtxtalamat.setText(jTable1.getValueAt(baris, 3).toString());
+        jcbmodelrambut.setSelectedItem(jTable1.getValueAt(baris, 4).toString());
+       
+        r();
+        
+        
+         
+         /*String nm=jTable1.getValueAt(baris,1).toString();
+        String np=jTable1.getValueAt(baris,2).toString();
+        String at=jTable1.getValueAt(baris,3).toString();
+        String mr=jTable1.getValueAt(baris,4).toString();
+        String id=jTable1.getValueAt(baris,0).toString();
+        
+        
+        txtnama.setText(nm);
+        txtnohp.setText(np);
+        jtxtalamat.setText(at);        
+        jcbmodelrambut.setSelectedItem(mr);*/
+       
+       
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        // TODO add your handling code here:
+        InitTable();
+        TampilData();
+        ComboRambut();
+    }//GEN-LAST:event_formComponentShown
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        this.p();
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -632,8 +932,6 @@ public class FormUser extends javax.swing.JFrame {
     private javax.swing.JButton btnKembali;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JButton btnTambah;
-    private javax.swing.JComboBox jComboBox1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -652,9 +950,9 @@ public class FormUser extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JComboBox jcbmodelrambut;
+    private javax.swing.JTextArea jtxtalamat;
+    private com.toedter.calendar.JDateChooser kalender;
     private javax.swing.JLabel lblForm;
     private javax.swing.JLabel lblHome;
     private javax.swing.JLabel lblKeluar;
@@ -668,6 +966,8 @@ public class FormUser extends javax.swing.JFrame {
     private javax.swing.JLabel lbltentang;
     private javax.swing.JLabel lbltransaksi;
     private javax.swing.JLabel tgl;
+    private javax.swing.JTextField txtnama;
     private javax.swing.JTextField txtno;
+    private javax.swing.JTextField txtnohp;
     // End of variables declaration//GEN-END:variables
 }

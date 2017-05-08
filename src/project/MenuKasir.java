@@ -66,6 +66,11 @@ public class MenuKasir extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Kasir");
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
 
@@ -96,6 +101,7 @@ public class MenuKasir extends javax.swing.JFrame {
         });
 
         txtHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/home.png"))); // NOI18N
+        txtHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtHome.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHomeMouseClicked(evt);
@@ -103,6 +109,7 @@ public class MenuKasir extends javax.swing.JFrame {
         });
 
         txtForm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/form.png"))); // NOI18N
+        txtForm.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtForm.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtFormMouseClicked(evt);
@@ -110,6 +117,7 @@ public class MenuKasir extends javax.swing.JFrame {
         });
 
         txtPelanggan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/member1.png"))); // NOI18N
+        txtPelanggan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtPelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtPelangganMouseClicked(evt);
@@ -124,6 +132,7 @@ public class MenuKasir extends javax.swing.JFrame {
         });
 
         txtTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/kasir.png"))); // NOI18N
+        txtTransaksi.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtTransaksi.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtTransaksiMouseClicked(evt);
@@ -138,6 +147,7 @@ public class MenuKasir extends javax.swing.JFrame {
         });
 
         txtTentang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/tentang.png"))); // NOI18N
+        txtTentang.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtTentang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtTentangMouseClicked(evt);
@@ -152,6 +162,7 @@ public class MenuKasir extends javax.swing.JFrame {
         });
 
         txtKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logout.png"))); // NOI18N
+        txtKeluar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtKeluar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtKeluarMouseClicked(evt);
@@ -245,7 +256,7 @@ public class MenuKasir extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(51, 51, 51));
         jLabel7.setText("SELAMAT DATANG KASIR");
 
@@ -258,11 +269,11 @@ public class MenuKasir extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(168, 168, 168)
+                .addGap(174, 174, 174)
                 .addComponent(jLabel7)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(196, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel8)
@@ -272,7 +283,7 @@ public class MenuKasir extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(50, 50, 50)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addGap(53, 53, 53)
@@ -413,6 +424,11 @@ public class MenuKasir extends javax.swing.JFrame {
         else
             {return;}
     }//GEN-LAST:event_txtKeluarMouseClicked
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        // TODO add your handling code here:
+        txtNama.setText(UserSession.getU_nama());
+    }//GEN-LAST:event_formComponentShown
 
     /**
      * @param args the command line arguments

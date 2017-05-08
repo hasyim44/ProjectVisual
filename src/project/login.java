@@ -41,17 +41,20 @@ public class login extends javax.swing.JFrame {
             if(rss.next()){
                 if ("1".equals(rss.getString("akses"))) {
                     
-                    
                     JOptionPane.showMessageDialog(null," Wellcome Admin");
                     MenuAdmin a = new MenuAdmin();
                     a.setVisible(true);
+                    System.out.println(rss.getString("nm_user"));
+                  new UserSession().setU_nama(rss.getString("nm_user"));
                   
                 }else if("0".equals(rss.getString("akses"))) {
                     
                     JOptionPane.showMessageDialog(null," Welcome kasir !");
                     MenuKasir b = new MenuKasir();
                     b.setVisible(true);
-                   
+                    System.out.println(rss.getString("nm_user"));
+                  new UserSession().setU_nama(rss.getString("nm_user"));
+                  
                 }else{
                     
                 }
@@ -92,7 +95,7 @@ public class login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login Akun");
 
-        jPanel1.setBackground(new java.awt.Color(0, 51, 204));
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Login Akun Anda");
@@ -112,13 +115,13 @@ public class login extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel6)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(37, 37, 37))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel6)
+                .addGap(0, 13, Short.MAX_VALUE))
         );
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/pelanggan.png"))); // NOI18N
@@ -210,7 +213,7 @@ public class login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -256,7 +259,7 @@ public class login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
         ProsesLogin(txtUsername.getText(),txtPassword.getText());
-        
+        dispose();
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed

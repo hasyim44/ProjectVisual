@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
  */
 public class MenuAdmin extends javax.swing.JFrame {
     private Connection con = koneksi.getConnection();
+     
+     String nama = UserSession.getU_nama();
 
     /**
      * Creates new form MenuUtama
@@ -25,6 +27,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         initComponents();
          
     }
+   
    
 
     /**
@@ -58,6 +61,11 @@ public class MenuAdmin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Admin");
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -89,6 +97,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         });
 
         txtHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/home.png"))); // NOI18N
+        txtHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtHome.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtHomeMouseClicked(evt);
@@ -96,6 +105,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         });
 
         txtKasir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/username.png"))); // NOI18N
+        txtKasir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtKasir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtKasirMouseClicked(evt);
@@ -103,6 +113,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         });
 
         txtTentang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/tentang.png"))); // NOI18N
+        txtTentang.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtTentang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtTentangMouseClicked(evt);
@@ -124,6 +135,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         });
 
         txtModel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/rambut.png"))); // NOI18N
+        txtModel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtModel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtModelMouseClicked(evt);
@@ -131,6 +143,7 @@ public class MenuAdmin extends javax.swing.JFrame {
         });
 
         txtKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logout.png"))); // NOI18N
+        txtKeluar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtKeluar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 txtKeluarMouseClicked(evt);
@@ -223,7 +236,7 @@ public class MenuAdmin extends javax.swing.JFrame {
 
         jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/lo2.png"))); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel6.setText("SELAMAT DATANG ADMIN");
 
         txtNama.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -235,14 +248,14 @@ public class MenuAdmin extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
+                        .addGap(167, 167, 167)
                         .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(225, 225, 225)
                         .addComponent(jLabel15)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(147, 147, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,7 +356,6 @@ public class MenuAdmin extends javax.swing.JFrame {
     private void txtModelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtModelMouseClicked
         // TODO add your handling code here:
          
-        new ModelRambut().setVisible(true);
         dispose();
     }//GEN-LAST:event_txtModelMouseClicked
 
@@ -358,6 +370,11 @@ public class MenuAdmin extends javax.swing.JFrame {
         else
             {return;}
     }//GEN-LAST:event_txtKeluarMouseClicked
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        txtNama.setText(UserSession.getU_nama());
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formComponentShown
 
     /**
      * @param args the command line arguments

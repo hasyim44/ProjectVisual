@@ -12,14 +12,14 @@ import javax.swing.JOptionPane;
  * @author Hasyim_Asyari
  */
 public class awal extends javax.swing.JFrame {
-
+  
     /**
      * Creates new form awawl
      */
     public awal() {
         initComponents();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,7 +50,7 @@ public class awal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Awal");
 
-        jPanel1.setBackground(new java.awt.Color(0, 102, 255));
+        jPanel1.setBackground(new java.awt.Color(69, 132, 226));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logo.png"))); // NOI18N
 
@@ -58,6 +58,7 @@ public class awal extends javax.swing.JFrame {
         jLabel2.setText("BARBER SHOP ");
 
         lblHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/home.png"))); // NOI18N
+        lblHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblHome.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblHomeMouseClicked(evt);
@@ -65,6 +66,7 @@ public class awal extends javax.swing.JFrame {
         });
 
         lblLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/login.png"))); // NOI18N
+        lblLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblLogin.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblLoginMouseClicked(evt);
@@ -72,6 +74,7 @@ public class awal extends javax.swing.JFrame {
         });
 
         lblTentang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/tentang.png"))); // NOI18N
+        lblTentang.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblTentang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTentangMouseClicked(evt);
@@ -79,6 +82,7 @@ public class awal extends javax.swing.JFrame {
         });
 
         lblKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logout.png"))); // NOI18N
+        lblKeluar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblKeluar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblKeluarMouseClicked(evt);
@@ -162,7 +166,7 @@ public class awal extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new java.awt.CardLayout());
 
-        jPanel3.setBackground(new java.awt.Color(153, 153, 255));
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
         jPanel3.setPreferredSize(new java.awt.Dimension(655, 368));
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N

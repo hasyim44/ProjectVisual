@@ -7,14 +7,28 @@ package project;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Hasyim_Asyari
  */
 public class Transaksi extends javax.swing.JFrame {
+    private Object JasperFillManager;
+    private DefaultTableModel model;                        //Tabel model yg dibuat
+    private Connection con = koneksi.getConnection();       //mengkoneksikan ke database
+    private Statement stt;                                  //mengeksekusi queri
+    private ResultSet rss;                                  //menampung queri
+    private int baris; 
+    private boolean data=true; 
 
     /**
      * Creates new form Transaksi
@@ -47,6 +61,53 @@ public class Transaksi extends javax.swing.JFrame {
         };
         new Timer(1000, taskPerformer).start();
     }
+//        private void CetakLaporan(String namaFile, HashMap hash){
+//        try{
+//            InputStream report;
+//            report = getClass().getResourceAsStream(namaFile);
+//            JasperPrint jprint = JasperFillManager.fillReport(report, hash, con );
+//                JasperViewer viewer = new JasperViewer(jprint, false);
+//                viewer.setFitPageZoomRatio();
+//                viewer.setVisible(true);
+//        }catch(Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
+        
+    
+
+    private void InitTable(){
+        model = new DefaultTableModel();
+        model.addColumn("Id");
+        model.addColumn("Nama");
+        model.addColumn("Model");
+        model.addColumn("Tanggal");
+        model.addColumn("Harga");
+        
+        jTable1.setModel(model);
+    }
+    
+    private void TampilData(){
+        try {
+            String sql = "SELECT transaksi.id_transaksi, pelanggan.nm_pelanggaan, model.jenis, transaksi.Tanggal, model.harga  FROM transaksi "
+                    + "   join pelanggan on pelanggan.id_planggan=transaksi.id_pelanggan "
+                    + "   join model on model.id_model=transaksi.id_model";
+            stt = con.createStatement();
+            rss = stt.executeQuery(sql);
+            while(rss.next()){
+                Object[] o = new Object[5];
+                o[0] = rss.getInt("id_transaksi");
+                o[1] = rss.getString("nm_pelanggan");
+                o[2] = rss.getString("jenis");
+                o[3] = rss.getString("Tangal");
+                o[4] = rss.getString("harga");
+                model.addRow(o);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,6 +117,8 @@ public class Transaksi extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lblHome = new javax.swing.JLabel();
@@ -80,6 +143,11 @@ public class Transaksi extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         lblwaktu = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+
+        jRadioButton1.setText("jRadioButton1");
+
+        jRadioButton2.setText("jRadioButton2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Kasir");
@@ -89,6 +157,7 @@ public class Transaksi extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logo.png"))); // NOI18N
 
         lblHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/home.png"))); // NOI18N
+        lblHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblHome.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblHomeMouseClicked(evt);
@@ -96,6 +165,7 @@ public class Transaksi extends javax.swing.JFrame {
         });
 
         lblForm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/form.png"))); // NOI18N
+        lblForm.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblForm.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblFormMouseClicked(evt);
@@ -103,6 +173,7 @@ public class Transaksi extends javax.swing.JFrame {
         });
 
         lblPelanggan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/member1.png"))); // NOI18N
+        lblPelanggan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblPelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblPelangganMouseClicked(evt);
@@ -110,6 +181,7 @@ public class Transaksi extends javax.swing.JFrame {
         });
 
         lblTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/kasir.png"))); // NOI18N
+        lblTransaksi.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblTransaksi.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTransaksiMouseClicked(evt);
@@ -117,6 +189,7 @@ public class Transaksi extends javax.swing.JFrame {
         });
 
         lblKeluar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/logout.png"))); // NOI18N
+        lblKeluar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblKeluar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblKeluarMouseClicked(evt);
@@ -169,6 +242,7 @@ public class Transaksi extends javax.swing.JFrame {
         });
 
         lblTentang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/tentang.png"))); // NOI18N
+        lblTentang.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblTentang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTentangMouseClicked(evt);
@@ -258,7 +332,7 @@ public class Transaksi extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel3.setBackground(new java.awt.Color(0, 102, 255));
+        jPanel3.setBackground(new java.awt.Color(51, 153, 255));
 
         jLabel18.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 255, 255));
@@ -289,7 +363,7 @@ public class Transaksi extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nama", "Model", "Harga", "Total"
+                "ID", "Nama", "Model", "Tanggal", "Biaya"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -301,7 +375,7 @@ public class Transaksi extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Edit");
+        jButton2.setText("Print");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -312,6 +386,13 @@ public class Transaksi extends javax.swing.JFrame {
 
         lblwaktu.setText("jLabel2");
 
+        jButton4.setText("Edit");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -320,10 +401,12 @@ public class Transaksi extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(202, 202, 202)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3)
                         .addGap(94, 94, 94))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -345,12 +428,17 @@ public class Transaksi extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblwaktu)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton3)
+                            .addComponent(jButton4))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(35, 35, 35))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -467,7 +555,21 @@ public class Transaksi extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+//         String namaFile;
+//        HashMap hash = new HashMap();
+//        if(txtParameter.getText().length()==0){
+//            namaFile = "/laporan/laporan_buku.jasper";
+//        }else{
+//            namaFile = "/laporan/laporan2.jasper";
+//            hash.put("penulis",txtParameter.getText());
+//        }
+//        CetakLaporan(namaFile, hash);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        new Edit().setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -508,12 +610,15 @@ public class Transaksi extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblForm;
@@ -530,4 +635,6 @@ public class Transaksi extends javax.swing.JFrame {
     private javax.swing.JLabel lbltransaksi;
     private javax.swing.JLabel lblwaktu;
     // End of variables declaration//GEN-END:variables
+
+   
 }
