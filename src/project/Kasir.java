@@ -28,7 +28,12 @@ public class Kasir extends javax.swing.JFrame {
      */
     public Kasir() {
         initComponents();
+        no(false);
     }
+    private void no(boolean a){
+        cmbakses.setEnabled(a);
+        
+    };
      private void InitTable(){
         model = new DefaultTableModel();        //membuat tabel baru di model
         model.addColumn("Id");                  //kolom id dalam model
@@ -40,24 +45,24 @@ public class Kasir extends javax.swing.JFrame {
     }
     private void TampilData(){      //Method untuk menampilkan data
         try{
-            String sql = "SELECT * FROM user";          // queriuntuk menampilkan isi tabel buku dari database
+            String sql = "SELECT *from user";          // queriuntuk menampilkan isi tabel buku dari database
             stt = con.createStatement();                
             rss = stt.executeQuery(sql);                
             while(rss.next()){                          
                 Object[] o = new Object[4];             //membuat Objek
                 o[0] = rss.getInt("id_user");                //objek 0 menampung data id
-                o[1] = rss.getString("fullname");          //objek 1 menampung data judul
+                o[1] = rss.getString("nm_user");          //objek 1 menampung data judul
                 o[2] = rss.getString("username");        //objek 2 menampung data penulis
-                o[3] = rss.getString("password");             //objek 3 menampung data harga
+                o[3] = rss.getString("pass");             //objek 3 menampung data harga
                 model.addRow(o);                        //baris pada model
             }
         }catch(SQLException e){
             System.out.printf(e.getMessage());
         }
     }
-    private void TambahData( String username, String password,String fullname, String level){                   //Method untuk menambah data 
+    private void TambahData( String nama, String pass ,String username, String akses){                   //Method untuk menambah data 
         try{
-            String sql = "INSERT INTO user VALUES (NULL,'"+username+"','"+password+"','"+fullname+"','"+level+"')";  //query untuk menambah data dari database
+            String sql = "INSERT INTO user VALUES (NULL,'"+nama+"','"+pass+"','"+username+"','"+akses+"')";  //query untuk menambah data dari database
             stt = con.createStatement();
             stt.executeUpdate(sql);
             
@@ -65,9 +70,9 @@ public class Kasir extends javax.swing.JFrame {
             System.out.println(e.getMessage());
         }
     }
-    public boolean UbahData( String id, String nama, String username, String password){        //Method untuk mengubah data
+    public boolean UbahData( String id, String nama, String pass, String username){        //Method untuk mengubah data
         try{
-            String sql = "UPDATE user SET nama='"+nama+"', username='"+username+"', password="+password+" where id="+id+";";  //query untuk mengubah data dari database
+            String sql = "UPDATE user SET nm_user='"+nama+"', pass='"+pass+"', username='"+username+"' where id_user="+id+";";  //query untuk mengubah data dari database
             stt = con.createStatement();
             stt.executeUpdate(sql);
             return true;
@@ -87,7 +92,7 @@ public class Kasir extends javax.swing.JFrame {
             return false;
         }
     }
-     private void ValidasiData(String username, String password, String fullname, String level){              //Method untuk validasi data
+     private void ValidasiData(String nama, String pass ,String username,String akses){              //Method untuk validasi data
         try{
             String sql = "SELECT*from user ";      //query untuk melihat isi tabel buku pada database
             stt = con.createStatement();
@@ -95,22 +100,23 @@ public class Kasir extends javax.swing.JFrame {
             while(rss.next()){
               Object[] o = new Object[2];                               //membuat Objek
               o[0] = rss.getString("username").toLowerCase();              //objek 0 menampung data judul
-              o[1] = rss.getString("password").toLowerCase();            //objek 1 menampung data penulils
+              o[1] = rss.getString("pass").toLowerCase();            //objek 1 menampung data penulils
               
-              if(o[0].equals(username.toLowerCase())&& o[1].equals(password.toLowerCase())){     //jika data judul sudah ada dan penulis sudah ada
+              if(o[0].equals(username.toLowerCase())&& o[1].equals(pass.toLowerCase())){     //jika data judul sudah ada dan penulis sudah ada
                   JOptionPane.showMessageDialog(null, "Data SUDAH ADA!!!!");                //akan tampil bahwa data sudah ada
                   data = false ;                                                            
                   break;                                                                    //proses akan berhenti
               }
             }
             if(data==true){                                                                 //jika data belum ada
-                TambahData(username,password,fullname,level);                                            //akan memanggil method TambahData untuk mengisi judul, penuli, harga
+                TambahData(nama,username,pass,akses);                                            //akan memanggil method TambahData untuk mengisi judul, penuli, harga
                     JOptionPane.showMessageDialog(null, "Berhasil Simpan Data");
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
     }
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -147,9 +153,15 @@ public class Kasir extends javax.swing.JFrame {
         txtusername = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtpassword = new javax.swing.JTextField();
+        cmbakses = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Admin");
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -381,6 +393,8 @@ public class Kasir extends javax.swing.JFrame {
 
         jLabel4.setText("Password");
 
+        cmbakses.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1" }));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -409,7 +423,8 @@ public class Kasir extends javax.swing.JFrame {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtpassword, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                                        .addComponent(cmbakses, javax.swing.GroupLayout.Alignment.LEADING, 0, 129, Short.MAX_VALUE)
+                                        .addComponent(txtpassword, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(txtusername, javax.swing.GroupLayout.Alignment.LEADING)))))
                         .addGap(12, 12, 12)))
                 .addContainerGap(24, Short.MAX_VALUE))
@@ -433,7 +448,9 @@ public class Kasir extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cmbakses, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTambah)
                     .addComponent(btnEdit)
@@ -546,10 +563,14 @@ public class Kasir extends javax.swing.JFrame {
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
-        String fullnama = txtnama.getText();                                //untuk mengambil nilai di komponen pada txtJudul
+        
+        
+        String nama = txtnama.getText();                                //untuk mengambil nilai di komponen pada txtJudul
         String username = txtusername.getText();                        //untuk mengambil nilai di komponen pada comboPenulis
-        String password = txtpassword.getText();                        //untuk mengambil nilai di komponen pada txtHarga
+        String pass = txtpassword.getText(); 
+        String akses = cmbakses.getSelectedItem().toString(); //untuk mengambil nilai di komponen pada txtHarga
          
+        ValidasiData(nama,username,pass,akses); 
         InitTable();
         TampilData();
     }//GEN-LAST:event_btnTambahActionPerformed
@@ -592,6 +613,12 @@ public class Kasir extends javax.swing.JFrame {
         txtpassword.setText(jTable1.getValueAt(baris, 3).toString());
     }//GEN-LAST:event_jTable1MouseClicked
 
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        // TODO add your handling code here:
+       InitTable();    //untuk memanggil isi model
+        TampilData();
+    }//GEN-LAST:event_formComponentShown
+
     /**
      * @param args the command line arguments
      */
@@ -631,6 +658,7 @@ public class Kasir extends javax.swing.JFrame {
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnTambah;
+    private javax.swing.JComboBox cmbakses;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

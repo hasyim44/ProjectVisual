@@ -91,7 +91,8 @@ public class Transaksi extends javax.swing.JFrame {
         try {
             String sql = "SELECT transaksi.id_transaksi, pelanggan.nm_pelanggaan, model.jenis, transaksi.Tanggal, model.harga  FROM transaksi "
                     + "   join pelanggan on pelanggan.id_planggan=transaksi.id_pelanggan "
-                    + "   join model on model.id_model=transaksi.id_model";
+                    + "   join model on model.id_model=transaksi.id_model"
+                    + "    where id_transaksi=id_pelanggan";
             stt = con.createStatement();
             rss = stt.executeQuery(sql);
             while(rss.next()){

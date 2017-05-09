@@ -37,21 +37,21 @@ public class login extends javax.swing.JFrame {
     private void ProsesLogin(String username, String password){
         try{
             Statement stt = con.createStatement();
-            ResultSet rss = stt.executeQuery("Select * From user where username ='"+username+"' and pass='"+password+"'");
+            ResultSet rss = stt.executeQuery("Select * From user where nm_user ='"+username+"' and pass='"+password+"'");
             if(rss.next()){
                 if ("1".equals(rss.getString("akses"))) {
                     
-                    JOptionPane.showMessageDialog(null," Wellcome Admin");
-                    MenuAdmin a = new MenuAdmin();
-                    a.setVisible(true);
+                    JOptionPane.showMessageDialog(null," Welcome Admin ");
+                            MenuAdmin a = new MenuAdmin();
+                            a.setVisible(true);
                     System.out.println(rss.getString("nm_user"));
                   new UserSession().setU_nama(rss.getString("nm_user"));
                   
                 }else if("0".equals(rss.getString("akses"))) {
                     
-                    JOptionPane.showMessageDialog(null," Welcome kasir !");
-                    MenuKasir b = new MenuKasir();
-                    b.setVisible(true);
+                    JOptionPane.showMessageDialog(null," Welcome Kasir");
+                         MenuKasir b = new MenuKasir();
+                         b.setVisible(true);
                     System.out.println(rss.getString("nm_user"));
                   new UserSession().setU_nama(rss.getString("nm_user"));
                   
@@ -61,7 +61,7 @@ public class login extends javax.swing.JFrame {
             }
             else{
                 JOptionPane.showMessageDialog(null,"user atau password anda salah");
-                clear();
+                return;
              }
          }catch(Exception e){
            System.out.println(e.getMessage());
@@ -260,6 +260,7 @@ public class login extends javax.swing.JFrame {
         // TODO add your handling code here:
         ProsesLogin(txtUsername.getText(),txtPassword.getText());
         dispose();
+        
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed

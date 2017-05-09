@@ -9,6 +9,9 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="componentShown" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="formComponentShown"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -316,7 +319,8 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="txtnama" min="-2" pref="176" max="-2" attributes="0"/>
                                       <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="txtpassword" alignment="0" pref="129" max="32767" attributes="0"/>
+                                          <Component id="cmbakses" alignment="0" pref="129" max="32767" attributes="0"/>
+                                          <Component id="txtpassword" alignment="0" max="32767" attributes="0"/>
                                           <Component id="txtusername" alignment="0" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -351,7 +355,9 @@
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtpassword" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="59" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="cmbakses" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="24" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnTambah" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnEdit" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -472,6 +478,16 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtpassword">
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmbakses">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="2">
+                <StringItem index="0" value="0"/>
+                <StringItem index="1" value="1"/>
+              </StringArray>
+            </Property>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
